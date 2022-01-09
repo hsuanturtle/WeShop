@@ -1,4 +1,4 @@
-import React from "react";
+import React,{useLayoutEffect} from "react";
 import CartContent from "../components/CartContent";
 import styled from "styled-components";
 import { useCartContext } from "../context/cart_context";
@@ -6,6 +6,9 @@ import { Link } from "react-router-dom";
 import PageHero from "../components/PageHero";
 
 const CartPage = () => {
+  useLayoutEffect(() => {
+    window.scrollTo(0, 0);
+  });
   const { cart } = useCartContext();
   if (cart.length < 1) {
     return (
