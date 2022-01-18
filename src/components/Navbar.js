@@ -1,10 +1,18 @@
 import React from "react";
 import styled from "styled-components";
 import CartButtons from "./CartButtons";
-import { AiOutlineUser, AiOutlineShoppingCart } from "react-icons/ai";
+import { useUserContext } from "../context/user_context";
+import { useCartContext } from "../context/cart_context";
+import {
+  AiOutlineUserAdd,
+  AiOutlineUserDelete,
+  AiOutlineShoppingCart,
+} from "react-icons/ai";
 import { Link } from "react-router-dom";
 
 const Navbar = () => {
+  const { clearCart } = useCartContext();
+  const { loginWithRedirect, myUser, logout } = useUserContext();
   return (
     <Wrapper>
       <nav class="navbar fixed-top navbar-expand-lg navbar-light bg-light">
@@ -31,9 +39,7 @@ const Navbar = () => {
                 </Link>
               </li>
               <li class="nav-item">
-                <Link
-                  class="nav-link"
-                  to="/products">
+                <Link class="nav-link" to="/products">
                   Products
                 </Link>
               </li>
@@ -44,14 +50,26 @@ const Navbar = () => {
               </li>
               <div class="nav-user">
                 <li class="nav-item ">
-                  <Link to="/cart" class="nav-link" href="#">
+                  <Link to="/cart" class="nav-link">
                     <AiOutlineShoppingCart />
                   </Link>
                 </li>
                 <li class="nav-item ">
-                  <a class="nav-link" href="#">
-                    <AiOutlineUser />
-                  </a>
+                  {myUser ? (
+                    <button
+                      class="nav-link"
+                      onClick={() => {
+                        clearCart();
+                        logout({ returnTo: window.location.origin });
+                      }}
+                    >
+                      <AiOutlineUserDelete />
+                    </button>
+                  ) : (
+                    <button class="nav-link" onClick={loginWithRedirect}>
+                      <AiOutlineUserAdd />
+                    </button>
+                  )}
                 </li>
               </div>
             </ul>
@@ -78,6 +96,10 @@ const Wrapper = styled.nav`
     position: absolute;
     right: 0;
     display: flex;
+  }
+  button {
+    background-color: transparent;
+    border: none;
   }
 `;
 export default Navbar;
